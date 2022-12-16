@@ -53,16 +53,19 @@ void print_words_count(char *src_filenames, char *seps)
         char *cur_filename = NULL;
         
 
-        getline(&cur_filename, &init_buf, src_file);
+        int cur_len = getline(&cur_filename, &init_buf, src_file);
 
-        if (cur_filename[strlen(cur_filename) - 1] != '\n')
+
+        if (cur_len < 0 || cur_filename[cur_len - 1] != '\n')
+        {
+            free(cur_filename);
             break;
+        }
         else
         {
-            cur_filename[strlen(cur_filename) - 1] = '\0';
+            cur_filename[cur_len - 1] = '\0';
 
             FILE *cur_file = fopen(cur_filename, "r");
-
 
             int cur_count = get_words_count_in_file(cur_file, seps);
 
